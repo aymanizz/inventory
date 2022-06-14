@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% for item in items %}
+<div>
+    <p>
+        {{ "Deleted: " if item.deleted else "" }}{{ item.name }}: <b>{{ item.quantity }}</b> {{ item.unit }}
+        <a href="{{ url_for('item', item_id=item.id) }}">Edit</a>
+        {% if not item.deleted %}
+        <a href="{{ url_for('delete_item', item_id=item.id) }}">Delete</a>
+        {% else %}
+    <form action="{{ url_for('undelete_item', item_id=item.id) }}" method="post" novalidate>
+        <!-- CSRF Token -->
+        {{ undelete_form.hidden_tag() }}
+        {{ undelete_form.submit(value="Undo Deletion") }}
+    </form>
+    {% endif %}
+    </p>
+</div>
+{% endfor %}
+{% endblock %}

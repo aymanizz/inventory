@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ item_form_type.title() }} Item</h1>
+<form action="" method="post" novalidate>
+    <!-- CSRF Token -->
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.name.label }}<br>
+        {{ form.name(size=32) }}
+        {% for error in form.name.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.description.label }}<br>
+        {{ form.description(size=32) }}
+        {% for error in form.description.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.quantity.label }}<br>
+        {{ form.quantity }}
+        {% for error in form.quantity.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.unit.label }}<br>
+        {{ form.unit(size=32) }}
+        {% for error in form.unit.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>{{ form.submit(value=item_form_type.title()) }}</p>
+</form>
+{% if item %}
+{% if item.deleted %}
+<p>Item is deleted with comment: {{ item.deletion_comment if item.deletion_comment else "No comment" }}</p>
+<form action="{{ url_for('undelete_item', item_id=item.id) }}" method="post" novalidate>
+    <!-- CSRF Token -->
+    {{ undelete_form.hidden_tag() }}
+    {{ undelete_form.submit(value="Undo Deletion") }}
+</form>
+{% else %}
+<a href="{{ url_for('delete_item', item_id=item.id) }}">Delete</a>
+{% endif %}
+{% endif %}
+{% endblock %}
